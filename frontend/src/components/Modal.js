@@ -72,6 +72,27 @@ export default class CustomModal extends Component {
                 Completed
               </Label>
             </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input
+                  type="date"
+                  name="createdDTF"
+                  value={this.state.activeItem.createdDTF}
+                  disabled
+                />
+                Created on:
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input
+                  type="date"
+                  name="completedDTF"
+                  value={this.state.activeItem.createdDTF}
+                />
+                Completed on:
+              </Label>
+            </FormGroup>
           </Form>
         </ModalBody>
         <ModalFooter>

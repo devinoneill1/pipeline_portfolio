@@ -1,47 +1,70 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
+import axios from "axios";
 
-const todoItems = [
+axios.defaults.baseURL = 'https://localhost:8000';
+/*const todoItems = [
   {
     id: 1,
     title: "Go to Market",
     description: "Buy ingredients to prepare dinner",
     completed: true,
+    createdDTF: "99/99/9999",
+    completedDTF: "88/88/8888",
   },
   {
     id: 2,
     title: "Study",
     description: "Read Algebra and History textbook for the upcoming test",
     completed: false,
+    createdDTF: "99/99/9999",
+    completedDTF: "88/88/8888",
   },
   {
     id: 3,
     title: "Sammy's books",
     description: "Go to library to return Sammy's books",
     completed: true,
+    createdDTF: "99/99/9999",
+    completedDTF: "88/88/8888",
   },
   {
     id: 4,
     title: "Article",
     description: "Write article on how to use Django with React",
     completed: false,
-  },
-];
+    createdDTF: "99/99/9999",
+    completedDTF: "88/88/8888",
+  }
+];*/
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       viewCompleted: false,
-      todoList: todoItems,
+      todoList: [],
       modal: false,
       activeItem: {
         title: "",
         description: "",
         completed: false,
+        createdDTF: "",
+        completedDTF: "",
       },
     };
   }
+
+  componentDidMount() {
+    this.refreshList();
+  }
+
+  refreshList = () => {
+    axios
+      .get("/api/todos/")
+      .then((res) => this.setState({ todoList: res.data }))
+      .catch((err) => console.log(err));
+  };
 
   toggle = () => {
     this.setState({ modal: !this.state.modal });
@@ -50,15 +73,25 @@ class App extends Component {
   handleSubmit = (item) => {
     this.toggle();
 
-    alert("save" + JSON.stringify(item));
+    if (item.id) {
+      axios
+        .put(`/api/todos/${item.id}/`, item)
+        .then((res) => this.refreshList());
+      return;
+    }
+    axios
+      .post("/api/todos/", item)
+      .then((res) => this.refreshList());
   };
 
   handleDelete = (item) => {
-    alert("delete" + JSON.stringify(item));
+    axios
+      .delete(`/api/todos/${item.id}/`)
+      .then((res) => this.refreshList());
   };
 
   createItem = () => {
-    const item = { title: "", description: "", completed: false };
+    const item = { title: "", description: "", completed: false, completedDTF: null };
 
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
@@ -106,13 +139,19 @@ class App extends Component {
         className="list-group-item d-flex justify-content-between align-items-center"
       >
         <span
-          className={`todo-title mr-2 ${
+          className={`todo-title mr-2 span-spread ${
             this.state.viewCompleted ? "completed-todo" : ""
           }`}
           title={item.description}
         >
-          {item.title}
-        </span>
+          {item.createdDTF}<br></br>{item.title}</span>{<br></br>}
+          <span
+          className={`todo-title mr-2 span-spread ${
+            this.state.viewCompleted ? "completed-todo" : ""
+          }`}
+          title={item.description}
+        >
+          Completed<br></br>{item.completedDTF}</span>
         <span>
           <button
             className="btn btn-secondary mr-2"
@@ -134,7 +173,7 @@ class App extends Component {
   render() {
     return (
       <main className="container">
-        <h1 className="text-white text-uppercase text-center my-4">Todo app</h1>
+        <h1 className="text-white text-uppercase text-center my-4">Todo List</h1>
         <div className="row">
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">

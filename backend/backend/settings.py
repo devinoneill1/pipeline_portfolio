@@ -82,9 +82,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'todo_db',
-        'USER': 'postgres',
-        'PASSWORD': 'elongatedmuskrat',
-        'HOST': 'localhost',
+        'USER': config('postgres'),
+        'PASSWORD': config('elongatedmuskrat'),
+        'HOST': 'db',
         #'PORT': '<db_port>',
     }
 }

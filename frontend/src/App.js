@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
 
-axios.defaults.baseURL = 'https://localhost:8000';
+axios.defaults.baseURL = 'http://0.0.0.0:8000';
 /*const todoItems = [
   {
     id: 1,
